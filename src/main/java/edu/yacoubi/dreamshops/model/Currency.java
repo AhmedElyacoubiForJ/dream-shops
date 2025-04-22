@@ -1,4 +1,4 @@
-package edu.yacoubi.dreamshops.service.product;
+package edu.yacoubi.dreamshops.model;
 
 public enum Currency {
     EUR, USD, GBP, JPY

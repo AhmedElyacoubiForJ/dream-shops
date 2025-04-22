@@ -6,7 +6,7 @@ import edu.yacoubi.dreamshops.model.Product;
 import java.util.List;
 
 public interface IProductService {
-    Product createProductForCategory(ProductRequestDTO request, Long categoryId);
+    Product createProduct(Product product);
 
     List<Product> getAllProducts();
 
@@ -27,4 +27,6 @@ public interface IProductService {
     List<Product> getProductsByBrandAndName(String brandName, String productName);
 
     Long countProductsByBrandAndName(String brandName, String productName);
+
+    void reduceInventory(Long productId, int quantity);
 }

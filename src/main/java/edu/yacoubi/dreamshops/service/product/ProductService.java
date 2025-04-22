@@ -4,6 +4,7 @@ import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
 import edu.yacoubi.dreamshops.exceptions.ProductNotFoundException;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.repository.ProductRepository;
+import edu.yacoubi.dreamshops.service.validation.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
+    private final ProductValidator productValidator;
 
     @Override
-    public Product createProductForCategory(ProductRequestDTO request, Long categoryId) {
-        return null;
+    public Product createProduct(final Product product) {
+//        Category category = categoryRepository.findByName(request.getCategoryName())
+//                .orElseGet(() -> {
+//                    Category newCategory = new Category(request.getCategoryName());
+//                    return categoryRepository.save(newCategory);
+//                });
+//
+//        Product newProduct = convertToEntity(request, category);
+
+        return productRepository.save(null);
     }
 
     @Override
@@ -74,5 +84,17 @@ public class ProductService implements IProductService {
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    public void reduceInventory(Long productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Produkt nicht gefunden!"));
+
+        if (product.getInventory() - quantity < 0) {
+            throw new IllegalArgumentException("Nicht genügend Bestand verfügbar!");
+        }
+
+        product.setInventory(product.getInventory() - quantity);
+        productRepository.save(product);
     }
 }

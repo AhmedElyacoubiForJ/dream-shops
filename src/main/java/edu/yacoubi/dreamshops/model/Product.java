@@ -1,9 +1,7 @@
 package edu.yacoubi.dreamshops.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,21 +21,19 @@ public class Product {
     private BigDecimal price;
     private int inventory;
     private String description;
+    private Status status = Status.ACTIVE;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Enumerated(EnumType.STRING)
+    private Currency currency = Currency.EUR;
+
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Image> images;
-
-    public Product(String name, String brand, BigDecimal price,
-                   int inventory, String description, Category category) {
-        this.name = name;
-        this.brand = brand;
-        this.price = price;
-        this.inventory = inventory;
-        this.description = description;
-        this.category = category;
-    }
 }

@@ -1,6 +1,5 @@
 package edu.yacoubi.dreamshops.dto.product;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +24,6 @@ public class ProductRequestDTO {
     @NotBlank(message = "Description is mandatory")
     private String description;
 
-    @Schema(description = "The ID of the category. This field is optional as it can also be provided as a path variable.")
+    @NotBlank(message = "Category id is mandatory")
     private Long categoryId;
 }
