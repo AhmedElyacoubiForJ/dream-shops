@@ -18,29 +18,53 @@ public class ProductValidator implements BaseValidator<Product, Long> {
     private final ProductRepository productRepository;
 
     @Override
-    public Product validateExists(final Long productId) {
+    public Product getValidated(final Long productId) {
         if (log.isInfoEnabled()) {
-            log.info("::validateExists started for productId {}", productId);
+            log.info("::getValidated started for productId {}", productId);
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Checking existence of product ID: {}", productId);
         }
 
-        Product product = productRepository.findById(productId)
+        final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> {
                     String errorMessage = "Product not found with ID: " + productId;
-                    log.error("::validateExists error: {}", errorMessage);
+                    log.error("::getValidated error: {}", errorMessage);
                     return new ProductNotFoundException(errorMessage);
                 });
 
         if (log.isInfoEnabled()) {
-            log.info("::validateExists completed successfully for productId {}", productId);
+            log.info("::getValidated completed successfully for productId {}", productId);
         }
         return product;
     }
 
-    public void validateProductStatus(Product product) {
+    @Override
+    public void throwIfNotExists(Long productId) {
+        if (log.isInfoEnabled()) {
+            log.info("::throwIfNotExists started for productId {}", productId);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Checking if product exists for ID: {}", productId);
+        }
+
+        boolean exists = productRepository.existsById(productId);
+
+        if (!exists) {
+            String errorMessage = "Product with ID " + productId + " does not exist.";
+            log.error("::throwIfNotExists error: {}", errorMessage);
+            throw new ProductNotFoundException(errorMessage);
+        }
+
+        if (log.isInfoEnabled()) {
+            log.info("::throwIfNotExists completed successfully for productId {}", productId);
+        }
+    }
+
+
+    public void validateProductStatus(final Product product) {
         if (log.isInfoEnabled()) {
             log.info("::validateProductStatus started for productId {}", product.getId());
         }
@@ -60,7 +84,7 @@ public class ProductValidator implements BaseValidator<Product, Long> {
         }
     }
 
-    public void validateInventory(Product product) {
+    public void validateInventory(final Product product) {
         if (log.isInfoEnabled()) {
             log.info("::validateInventory started for productId {}", product.getId());
         }
