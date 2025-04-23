@@ -21,9 +21,13 @@ public class Product {
     private BigDecimal price;
     private int inventory;
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Status status = Status.ACTIVE;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Currency currency = Currency.EUR;
 
     @ManyToOne
