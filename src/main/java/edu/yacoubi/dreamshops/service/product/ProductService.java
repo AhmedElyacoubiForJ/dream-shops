@@ -6,27 +6,35 @@ import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.repository.ProductRepository;
 import edu.yacoubi.dreamshops.service.validation.ProductValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final ProductValidator productValidator;
 
     @Override
     public Product createProduct(final Product product) {
-//        Category category = categoryRepository.findByName(request.getCategoryName())
-//                .orElseGet(() -> {
-//                    Category newCategory = new Category(request.getCategoryName());
-//                    return categoryRepository.save(newCategory);
-//                });
-//
-//        Product newProduct = convertToEntity(request, category);
+        if (log.isInfoEnabled()) {
+            log.info("::createProduct started with: product {}", product);
+        }
 
-        return productRepository.save(null);
+        if (product == null || product.getCategory() == null) {
+            throw new IllegalArgumentException("Product must not be null and must have a valid category.");
+        }
+
+        product.setId(null);
+        final Product savedProduct = productRepository.save(product);
+
+        if (log.isInfoEnabled()) {
+            log.info("::createProduct completed successfully");
+        }
+        return savedProduct;
     }
 
     @Override
@@ -36,8 +44,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found!"));
+        return productValidator.getValidated(productId);
     }
 
     @Override

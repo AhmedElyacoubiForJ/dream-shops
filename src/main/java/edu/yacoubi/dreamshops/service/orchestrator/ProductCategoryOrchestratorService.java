@@ -24,6 +24,10 @@ public class ProductCategoryOrchestratorService
             log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productDTO, categoryId);
         }
 
+        if (productDTO == null) {
+            throw new IllegalArgumentException("ProductRequestDTO must not be null.");
+        }
+
         Category category = categoryService.getCategoryById(categoryId);
 
         Product product = Product.builder()
