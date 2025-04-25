@@ -33,7 +33,7 @@ public class DatabaseInitializerService {
     private Long createCategoryIfNotExists(String name, String description) {
         Category category = categoryService.getCategoryByName(name).orElseGet(() -> {
             Category newCategory = new Category(name, description);
-            return categoryService.createCategory(newCategory);
+            return categoryService.addCategory(newCategory);
         });
         log.info("Kategorie erstellt oder bereits vorhanden: {}", category.getName());
         return category.getId();

@@ -38,9 +38,9 @@ public class CategoryValidator implements BaseValidator<Category, Long> {
     }
 
     @Override
-    public void checkExistsOrThrow(final Long categoryId) {
+    public void existsByIdOrThrow(final Long categoryId) {
         if (log.isInfoEnabled()) {
-            log.info("::checkExistsOrThrow started for categoryId {}", categoryId);
+            log.info("::existsByIdOrThrow started for categoryId {}", categoryId);
         }
 
         if (log.isDebugEnabled()) {
@@ -51,12 +51,26 @@ public class CategoryValidator implements BaseValidator<Category, Long> {
 
         if (!exists) {
             String errorMessage = "Category with ID " + categoryId + " does not exist.";
-            log.error("::checkExistsOrThrow error: {}", errorMessage);
+            log.error("::existsByIdOrThrow error: {}", errorMessage);
             throw new CategoryNotFoundException(errorMessage);
         }
 
         if (log.isInfoEnabled()) {
-            log.info("::checkExistsOrThrow completed successfully for categoryId {}", categoryId);
+            log.info("::existsByIdOrThrow completed successfully for categoryId {}", categoryId);
         }
+    }
+
+    public boolean existsByName(String name) {
+        if (log.isInfoEnabled()) {
+            log.info("::existsByName started for category name {}", name);
+        }
+
+        boolean exists = categoryRepository.existsByName(name);
+
+        if (log.isInfoEnabled()) {
+            log.info("::existsByName completed with result {} for category name {}", exists, name);
+        }
+
+        return exists;
     }
 }

@@ -41,9 +41,9 @@ public class ProductValidator implements BaseValidator<Product, Long> {
     }
 
     @Override
-    public void checkExistsOrThrow(Long productId) {
+    public void existsByIdOrThrow(Long productId) {
         if (log.isInfoEnabled()) {
-            log.info("::checkExistsOrThrow started for productId {}", productId);
+            log.info("::existsByIdOrThrow started for productId {}", productId);
         }
 
         if (log.isDebugEnabled()) {
@@ -54,15 +54,14 @@ public class ProductValidator implements BaseValidator<Product, Long> {
 
         if (!exists) {
             String errorMessage = "Product with ID " + productId + " does not exist.";
-            log.error("::checkExistsOrThrow error: {}", errorMessage);
+            log.error("::existsByIdOrThrow error: {}", errorMessage);
             throw new ProductNotFoundException(errorMessage);
         }
 
         if (log.isInfoEnabled()) {
-            log.info("::checkExistsOrThrow completed successfully for productId {}", productId);
+            log.info("::existsByIdOrThrow completed successfully for productId {}", productId);
         }
     }
-
 
     public void validateProductStatus(final Product product) {
         if (log.isInfoEnabled()) {
