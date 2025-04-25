@@ -19,9 +19,9 @@ public class ProductService implements IProductService {
     private final ProductValidator productValidator;
 
     @Override
-    public Product createProduct(final Product product) {
+    public Product addProduct(final Product product) {
         if (log.isInfoEnabled()) {
-            log.info("::createProduct started with: product {}", product);
+            log.info("::addProduct started with: product {}", product);
         }
 
         if (product == null || product.getCategory() == null) {
@@ -32,7 +32,7 @@ public class ProductService implements IProductService {
         final Product savedProduct = productRepository.save(product);
 
         if (log.isInfoEnabled()) {
-            log.info("::createProduct completed successfully");
+            log.info("::addProduct completed successfully");
         }
         return savedProduct;
     }
@@ -44,7 +44,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductById(Long productId) {
-        return productValidator.getValidated(productId);
+        return productValidator.getValidatedOrThrow(productId);
     }
 
     @Override
@@ -103,5 +103,10 @@ public class ProductService implements IProductService {
 
         product.setInventory(product.getInventory() - quantity);
         productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> getProductsByPriceRange(double minPrice, double maxPrice) {
+        return List.of();
     }
 }

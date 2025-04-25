@@ -39,7 +39,7 @@ public class ProductCategoryOrchestratorService
                 .category(category)
                 .build();
 
-        final Product savedProduct = productService.createProduct(product);
+        final Product savedProduct = productService.addProduct(product);
 
         if (log.isInfoEnabled()) {
             log.info("::createProductForCategory completed successfully");

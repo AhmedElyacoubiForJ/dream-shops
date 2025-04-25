@@ -1,7 +1,7 @@
 package edu.yacoubi.dreamshops.service.validation;
 
 public interface BaseValidator<T, ID> {
-    T getValidated(ID id);
+    T getValidatedOrThrow(ID id);
 
-    void throwIfNotExists(ID id);
+    void checkExistsOrThrow(ID id);
 }

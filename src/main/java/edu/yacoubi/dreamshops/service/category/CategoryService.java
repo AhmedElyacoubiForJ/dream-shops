@@ -22,7 +22,7 @@ public class CategoryService implements ICategoryService {
             log.info("::getCategoryById started for categoryId {}", categoryId);
         }
 
-        Category foundCategory = categoryValidator.getValidated(categoryId);
+        Category foundCategory = categoryValidator.getValidatedOrThrow(categoryId);
 
         if (log.isInfoEnabled()) {
             log.info("::getCategoryById completed successfully for categoryId {}", categoryId);

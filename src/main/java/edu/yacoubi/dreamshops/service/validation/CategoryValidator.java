@@ -14,9 +14,9 @@ public class CategoryValidator implements BaseValidator<Category, Long> {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public Category getValidated(final Long categoryId) {
+    public Category getValidatedOrThrow(final Long categoryId) {
         if (log.isInfoEnabled()) {
-            log.info("::getValidated started for categoryId {}", categoryId);
+            log.info("::getValidatedOrThrow started for categoryId {}", categoryId);
 
         }
 
@@ -27,20 +27,20 @@ public class CategoryValidator implements BaseValidator<Category, Long> {
         final Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     String errorMessage = "Category not found with ID: " + categoryId;
-                    log.error("::getValidated error: {}", errorMessage);
+                    log.error("::getValidatedOrThrow error: {}", errorMessage);
                     return new CategoryNotFoundException(errorMessage);
                 });
 
         if (log.isInfoEnabled()) {
-            log.info("::getValidated completed successfully for categoryId {}", categoryId);
+            log.info("::getValidatedOrThrow completed successfully for categoryId {}", categoryId);
         }
         return category;
     }
 
     @Override
-    public void throwIfNotExists(final Long categoryId) {
+    public void checkExistsOrThrow(final Long categoryId) {
         if (log.isInfoEnabled()) {
-            log.info("::throwIfNotExists started for categoryId {}", categoryId);
+            log.info("::checkExistsOrThrow started for categoryId {}", categoryId);
         }
 
         if (log.isDebugEnabled()) {
@@ -51,12 +51,12 @@ public class CategoryValidator implements BaseValidator<Category, Long> {
 
         if (!exists) {
             String errorMessage = "Category with ID " + categoryId + " does not exist.";
-            log.error("::throwIfNotExists error: {}", errorMessage);
+            log.error("::checkExistsOrThrow error: {}", errorMessage);
             throw new CategoryNotFoundException(errorMessage);
         }
 
         if (log.isInfoEnabled()) {
-            log.info("::throwIfNotExists completed successfully for categoryId {}", categoryId);
+            log.info("::checkExistsOrThrow completed successfully for categoryId {}", categoryId);
         }
     }
 }

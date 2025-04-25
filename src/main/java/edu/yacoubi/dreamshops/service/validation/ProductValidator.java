@@ -18,9 +18,9 @@ public class ProductValidator implements BaseValidator<Product, Long> {
     private final ProductRepository productRepository;
 
     @Override
-    public Product getValidated(final Long productId) {
+    public Product getValidatedOrThrow(final Long productId) {
         if (log.isInfoEnabled()) {
-            log.info("::getValidated started for productId {}", productId);
+            log.info("::getValidatedOrThrow started for productId {}", productId);
         }
 
         if (log.isDebugEnabled()) {
@@ -30,20 +30,20 @@ public class ProductValidator implements BaseValidator<Product, Long> {
         final Product product = productRepository.findById(productId)
                 .orElseThrow(() -> {
                     String errorMessage = "Product not found with ID: " + productId;
-                    log.error("::getValidated error: {}", errorMessage);
+                    log.error("::getValidatedOrThrow error: {}", errorMessage);
                     return new ProductNotFoundException(errorMessage);
                 });
 
         if (log.isInfoEnabled()) {
-            log.info("::getValidated completed successfully for productId {}", productId);
+            log.info("::getValidatedOrThrow completed successfully for productId {}", productId);
         }
         return product;
     }
 
     @Override
-    public void throwIfNotExists(Long productId) {
+    public void checkExistsOrThrow(Long productId) {
         if (log.isInfoEnabled()) {
-            log.info("::throwIfNotExists started for productId {}", productId);
+            log.info("::checkExistsOrThrow started for productId {}", productId);
         }
 
         if (log.isDebugEnabled()) {
@@ -54,12 +54,12 @@ public class ProductValidator implements BaseValidator<Product, Long> {
 
         if (!exists) {
             String errorMessage = "Product with ID " + productId + " does not exist.";
-            log.error("::throwIfNotExists error: {}", errorMessage);
+            log.error("::checkExistsOrThrow error: {}", errorMessage);
             throw new ProductNotFoundException(errorMessage);
         }
 
         if (log.isInfoEnabled()) {
-            log.info("::throwIfNotExists completed successfully for productId {}", productId);
+            log.info("::checkExistsOrThrow completed successfully for productId {}", productId);
         }
     }
 
