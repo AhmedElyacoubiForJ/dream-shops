@@ -10,11 +10,11 @@ public interface IProductService {
 
     List<Product> getAllProducts();
 
-    Product getProductById(Long productId);
+    Product getProductByIdOrThrow(Long productId);
 
     Product updateProduct(ProductRequestDTO product, Long productId);
 
-    void deleteProduct(Long productId);
+    void deleteProductOrThrow(Long productId);
 
     List<Product> getProductsByCategoryName(String categoryName);
 
@@ -28,7 +28,7 @@ public interface IProductService {
 
     Long countProductsByBrandAndName(String brandName, String productName);
 
-    void reduceInventory(Long productId, int quantity);
+    void reduceInventoryOrThrow(Long productId, int quantity);
 
     List<Product> getProductsByPriceRange(double minPrice, double maxPrice);
 }
