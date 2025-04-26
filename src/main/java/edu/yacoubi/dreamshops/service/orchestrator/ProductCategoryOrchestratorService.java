@@ -24,27 +24,28 @@ public class ProductCategoryOrchestratorService
             log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productDTO, categoryId);
         }
 
-        if (productDTO == null) {
-            throw new IllegalArgumentException("ProductRequestDTO must not be null.");
+        try {
+            final Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
+
+            Product product = Product.builder()
+                    .name(productDTO.getName())
+                    .brand(productDTO.getBrand())
+                    .price(productDTO.getPrice())
+                    .inventory(productDTO.getInventory())
+                    .description(productDTO.getDescription())
+                    .category(foundCategory)
+                    .build();
+
+            final Product savedProduct = productService.addProduct(product);
+
+            if (log.isInfoEnabled()) {
+                log.info("::createProductForCategory completed successfully with product {}", savedProduct);
+            }
+
+            return savedProduct;
+        } catch (Exception e) {
+            log.error("::createProductForCategory error for categoryId {}: {}", categoryId, e.getMessage());
+            throw e;
         }
-
-        Category category = categoryService.getCategoryById(categoryId);
-
-        Product product = Product.builder()
-                .name(productDTO.getName())
-                .brand(productDTO.getBrand())
-                .price(productDTO.getPrice())
-                .inventory(productDTO.getInventory())
-                .description(productDTO.getDescription())
-                .category(category)
-                .build();
-
-        final Product savedProduct = productService.addProduct(product);
-
-        if (log.isInfoEnabled()) {
-            log.info("::createProductForCategory completed successfully");
-        }
-
-        return savedProduct;
     }
 }

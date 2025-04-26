@@ -18,13 +18,13 @@ public class CategoryService implements ICategoryService {
     private final CategoryValidator categoryValidator;
 
     @Override
-    public Category getCategoryById(Long categoryId) {
+    public Category getCategoryByIdOrThrow(final Long categoryId) {
         if (log.isInfoEnabled()) {
             log.info("::getCategoryById started for categoryId {}", categoryId);
         }
 
         try {
-            Category foundCategory = categoryValidator.getValidatedOrThrow(categoryId);
+            final Category foundCategory = categoryValidator.getValidatedOrThrow(categoryId);
             log.info("::getCategoryById completed successfully for categoryId {}", categoryId);
 
             return foundCategory;
@@ -34,23 +34,8 @@ public class CategoryService implements ICategoryService {
         }
     }
 
-//    @Override
-//    public boolean existsByName(String name) {
-//        if (log.isInfoEnabled()) {
-//            log.info("::existsByName started for category name {}", name);
-//        }
-//
-//        boolean exists = categoryRepository.existsByName(name);
-//
-//        if (log.isInfoEnabled()) {
-//            log.info("::existsByName completed with result {} for category name {}", exists, name);
-//        }
-//
-//        return exists;
-//    }
-
     @Override
-    public Category addCategory(Category category) {
+    public Category addCategory(final Category category) {
         if (log.isInfoEnabled()) {
             log.info("::addCategory started for category {}", category);
         }
@@ -61,14 +46,14 @@ public class CategoryService implements ICategoryService {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        String categoryName = category.getName();
+        final String categoryName = category.getName();
         if (categoryValidator.existsByName(categoryName)) {
-            String errorMessage = "Entity already exists with name: " + categoryName;
+            final String errorMessage = "Entity already exists with name: " + categoryName;
             log.error("::addCategory error: {}", errorMessage);
             throw new DuplicateEntityException(errorMessage);
         }
 
-        Category savedCategory = categoryRepository.save(category);
+        final Category savedCategory = categoryRepository.save(category);
 
         if (log.isInfoEnabled()) {
             log.info("::addCategory completed successfully for category {}", savedCategory);
@@ -79,12 +64,12 @@ public class CategoryService implements ICategoryService {
 
 
     @Override
-    public Optional<Category> getCategoryByName(String name) {
+    public Optional<Category> getCategoryByName(final String name) {
         if (log.isInfoEnabled()) {
             log.info("::getCategoryByName started for category name {}", name);
         }
 
-        Optional<Category> category = categoryRepository.findByName(name);
+        final Optional<Category> category = categoryRepository.findByName(name);
 
         if (log.isInfoEnabled()) {
             log.info("::getCategoryByName completed with result {} for category name {}", category.isPresent(), name);

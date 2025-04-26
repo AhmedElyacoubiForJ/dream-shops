@@ -5,7 +5,7 @@ import edu.yacoubi.dreamshops.model.Category;
 import java.util.Optional;
 
 public interface ICategoryService {
-    Category getCategoryById(Long categoryId);
+    Category getCategoryByIdOrThrow(Long categoryId);
 
     Category addCategory(Category category);
 
