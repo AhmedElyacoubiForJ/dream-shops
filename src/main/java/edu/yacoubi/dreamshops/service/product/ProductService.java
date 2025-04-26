@@ -216,7 +216,18 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getProductsByPriceRange(double minPrice, double maxPrice) {
-        return List.of();
+    public List<Product> getProductsByPriceRange(final double minPrice, final double maxPrice) {
+        if (log.isInfoEnabled()) {
+            log.info("::getProductsByPriceRange started for minPrice {} and maxPrice {}", minPrice, maxPrice);
+        }
+
+        final List<Product> products = productRepository.findByPriceBetween(minPrice, maxPrice);
+
+        if (log.isInfoEnabled()) {
+            log.info("::getProductsByPriceRange completed with {} products found for range {} - {}",
+                    products.size(), minPrice, maxPrice);
+        }
+
+        return products;
     }
 }
