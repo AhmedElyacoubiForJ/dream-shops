@@ -5,4 +5,5 @@ import edu.yacoubi.dreamshops.model.Product;
 
 public interface IProductCategoryOrchestratorService {
     Product createProductForCategory(ProductRequestDTO productDTO, Long categoryId);
+    Product updateProduct(final ProductRequestDTO productDTO, final Long productId);
 }

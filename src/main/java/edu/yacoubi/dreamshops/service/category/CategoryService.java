@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,6 +63,16 @@ public class CategoryService implements ICategoryService {
         return savedCategory;
     }
 
+    @Override
+    public Category updateCategory(Category category) {
+        return null;
+    }
+
+    @Override
+    public void deleteCategoryById(Long categoryId) {
+
+    }
+
 
     @Override
     public Optional<Category> getCategoryByName(final String name) {
@@ -76,6 +87,11 @@ public class CategoryService implements ICategoryService {
         }
 
         return category;
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return List.of();
     }
 
     // weitere methoden

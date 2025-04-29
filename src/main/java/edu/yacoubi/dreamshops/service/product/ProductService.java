@@ -1,9 +1,9 @@
 package edu.yacoubi.dreamshops.service.product;
 
-import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.repository.ProductRepository;
 import edu.yacoubi.dreamshops.service.validation.ProductValidator;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -72,8 +72,19 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product updateProduct(ProductRequestDTO product, Long productId) {
-        return null;
+    @Transactional
+    public Product updateProduct(final Product product) {
+        if (log.isInfoEnabled()) {
+            log.info("::updateProduct started for productId {}", product.getId());
+        }
+
+        final Product updatedProduct = productRepository.save(product);
+
+        if (log.isInfoEnabled()) {
+            log.info("::updateProduct completed successfully for productId {}", product.getId());
+        }
+
+        return updatedProduct;
     }
 
     @Override
