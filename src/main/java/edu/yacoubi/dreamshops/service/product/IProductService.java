@@ -1,6 +1,5 @@
 package edu.yacoubi.dreamshops.service.product;
 
-import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
 import edu.yacoubi.dreamshops.model.Product;
 
 import java.util.List;

@@ -10,7 +10,10 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-public class ProductRequestDTO {
+public class ProductUpdateDTO {
+    @NotNull(message = "Product ID is mandatory")
+    private Long id;
+
     @NotBlank(message = "Product name is mandatory")
     private String name;
 
@@ -28,6 +31,6 @@ public class ProductRequestDTO {
     @NotBlank(message = "Description is mandatory")
     private String description;
 
-    @NotNull(message = "Category id is mandatory")
+    @NotNull(message = "Category ID is mandatory")
     private Long categoryId;
 }

@@ -1,7 +1,7 @@
 package edu.yacoubi.dreamshops.service.orchestrator;
 
 import edu.yacoubi.dreamshops.converter.ProductConverter;
-import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
+import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.service.category.CategoryService;
@@ -22,7 +22,7 @@ public class ProductCategoryOrchestratorService
     private final ProductConverter productConverter;
 
     @Override
-    public Product createProductForCategory(final ProductRequestDTO productDTO, final Long categoryId) {
+    public Product createProductForCategory(final ProductCreateDTO productDTO, final Long categoryId) {
         if (log.isInfoEnabled()) {
             log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productDTO, categoryId);
         }
@@ -54,7 +54,7 @@ public class ProductCategoryOrchestratorService
 
     @Override
     @Transactional
-    public Product updateProduct(final ProductRequestDTO productDTO, final Long productId) {
+    public Product updateProduct(final ProductCreateDTO productDTO, final Long productId) {
         if (log.isInfoEnabled()) {
             log.info("::updateProduct started with productDTO {} and productId {}", productDTO, productId);
         }

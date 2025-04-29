@@ -1,6 +1,6 @@
 package edu.yacoubi.dreamshops.converter;
 
-import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
+import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
 import edu.yacoubi.dreamshops.dto.product.ProductResponseDTO;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.model.Product;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductConverter {
-    public Product toEntity(ProductRequestDTO dto, Category category) {
+    public Product toEntity(ProductCreateDTO dto, Category category) {
         return Product.builder()
                 .name(dto.getName())
                 .brand(dto.getBrand())

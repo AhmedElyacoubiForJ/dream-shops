@@ -1,6 +1,6 @@
 package edu.yacoubi.dreamshops.service.init;
 
-import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
+import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.service.category.CategoryService;
 import edu.yacoubi.dreamshops.service.orchestrator.ProductCategoryOrchestratorService;
@@ -40,7 +40,7 @@ public class DatabaseInitializerService {
     }
 
     private void createProductForCategory(Long categoryId) {
-        ProductRequestDTO productDTO = ProductRequestDTO.builder()
+        ProductCreateDTO productDTO = ProductCreateDTO.builder()
                 .name("Smartphone")
                 .brand("Samsung")
                 .price(BigDecimal.valueOf(999.99))

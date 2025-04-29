@@ -1,9 +1,11 @@
 package edu.yacoubi.dreamshops.dto.product;
 
+import edu.yacoubi.dreamshops.dto.image.ImageResponseDTO;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -14,5 +16,6 @@ public class ProductResponseDTO {
     private BigDecimal price;
     private int inventory;
     private String description;
-    private Long categoryId;
+    private Long categoryId; // Verhindert direkte Entity-Abhängigkeit
+    private List<ImageResponseDTO> images;
 }
