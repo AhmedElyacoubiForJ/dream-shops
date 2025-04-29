@@ -1,5 +1,6 @@
 package edu.yacoubi.dreamshops.service.orchestrator;
 
+import edu.yacoubi.dreamshops.converter.ProductConverter;
 import edu.yacoubi.dreamshops.dto.product.ProductRequestDTO;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.model.Product;
@@ -18,6 +19,7 @@ public class ProductCategoryOrchestratorService
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final ProductConverter productConverter;
 
     @Override
     public Product createProductForCategory(final ProductRequestDTO productDTO, final Long categoryId) {
@@ -27,15 +29,15 @@ public class ProductCategoryOrchestratorService
 
         try {
             final Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
-
-            Product product = Product.builder()
-                    .name(productDTO.getName())
-                    .brand(productDTO.getBrand())
-                    .price(productDTO.getPrice())
-                    .inventory(productDTO.getInventory())
-                    .description(productDTO.getDescription())
-                    .category(foundCategory)
-                    .build();
+            Product product = productConverter.toEntity(productDTO, foundCategory);
+//            Product product = Product.builder()
+//                    .name(productDTO.getName())
+//                    .brand(productDTO.getBrand())
+//                    .price(productDTO.getPrice())
+//                    .inventory(productDTO.getInventory())
+//                    .description(productDTO.getDescription())
+//                    .category(foundCategory)
+//                    .build();
 
             final Product savedProduct = productService.addProduct(product);
 
