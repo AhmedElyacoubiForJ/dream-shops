@@ -1,6 +1,6 @@
 package edu.yacoubi.dreamshops.service.category;
 
-import edu.yacoubi.dreamshops.exceptions.DuplicateEntityException;
+import edu.yacoubi.dreamshops.exception.DuplicateEntityException;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.repository.CategoryRepository;
 import edu.yacoubi.dreamshops.service.validation.CategoryValidator;

@@ -2,6 +2,7 @@ package edu.yacoubi.dreamshops.service.orchestrator;
 
 import edu.yacoubi.dreamshops.converter.ProductConverter;
 import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
+import edu.yacoubi.dreamshops.exception.CategoryNotFoundException;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.service.category.CategoryService;
@@ -22,35 +23,25 @@ public class ProductCategoryOrchestratorService
     private final ProductConverter productConverter;
 
     @Override
-    public Product createProductForCategory(final ProductCreateDTO productCreateDTO, final Long categoryId) {
-        if (log.isInfoEnabled()) {
-            log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productCreateDTO, categoryId);
-        }
+    public Product createProductForCategory(ProductCreateDTO productCreateDTO, Long categoryId) {
+        log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productCreateDTO, categoryId);
 
         try {
-            final Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
+            Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
             Product product = productConverter.toEntity(productCreateDTO, foundCategory);
-//            Product product = Product.builder()
-//                    .name(productDTO.getName())
-//                    .brand(productDTO.getBrand())
-//                    .price(productDTO.getPrice())
-//                    .inventory(productDTO.getInventory())
-//                    .description(productDTO.getDescription())
-//                    .category(foundCategory)
-//                    .build();
+            Product savedProduct = productService.addProduct(product);
 
-            final Product savedProduct = productService.addProduct(product);
-
-            if (log.isInfoEnabled()) {
-                log.info("::createProductForCategory completed successfully with product {}", savedProduct);
-            }
-
+            log.info("::createProductForCategory completed successfully with product {}", savedProduct);
             return savedProduct;
-        } catch (Exception e) {
-            log.error("::createProductForCategory error for categoryId {}: {}", categoryId, e.getMessage());
+        } catch (CategoryNotFoundException e) {
+            log.error("::createProductForCategory failed - Category not found: {}", categoryId);
             throw e;
+        } catch (Exception e) {
+            log.error("::createProductForCategory failed for categoryId {}: {}", categoryId, e.getMessage());
+            throw new RuntimeException("Unexpected error while creating product for category " + categoryId, e);
         }
     }
+
 
     @Override
     @Transactional

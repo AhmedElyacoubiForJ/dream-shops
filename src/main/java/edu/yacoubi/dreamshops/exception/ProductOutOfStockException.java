@@ -1,4 +1,4 @@
-package edu.yacoubi.dreamshops.exceptions;
+package edu.yacoubi.dreamshops.exception;
 
 public class ProductOutOfStockException extends RuntimeException {
     public ProductOutOfStockException(String message) {

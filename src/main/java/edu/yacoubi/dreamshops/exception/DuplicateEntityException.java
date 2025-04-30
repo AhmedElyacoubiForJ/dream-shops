@@ -1,4 +1,4 @@
-package edu.yacoubi.dreamshops.exceptions;
+package edu.yacoubi.dreamshops.exception;
 
 public class DuplicateEntityException extends RuntimeException {
     public DuplicateEntityException(String message) {
