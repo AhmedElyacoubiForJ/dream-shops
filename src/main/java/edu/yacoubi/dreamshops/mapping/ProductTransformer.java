@@ -8,7 +8,14 @@ import edu.yacoubi.dreamshops.model.Product;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductTransformer {
+public class ProductTransformer implements EntityMapper<Product, ProductResponseDTO>,
+        UpdatableEntity<Product, ProductUpdateDTO> {
+
+    @Override
+    public Product toEntity(ProductResponseDTO dto) {
+        throw new UnsupportedOperationException("Use specific DTO methods for creation.");
+    }
+
     public Product toEntity(ProductCreateDTO dto, Category category) {
         return Product.builder()
                 .name(dto.getName())
@@ -20,18 +27,7 @@ public class ProductTransformer {
                 .build();
     }
 
-    public ProductResponseDTO toDTO(Product product) {
-        return ProductResponseDTO.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .brand(product.getBrand())
-                .price(product.getPrice())
-                .inventory(product.getInventory())
-                .description(product.getDescription())
-                .categoryId(product.getCategory().getId())
-                .build();
-    }
-
+    @Override
     public void updateEntity(Product existingProduct, ProductUpdateDTO dto) {
         existingProduct.setName(dto.getName());
         existingProduct.setBrand(dto.getBrand());
@@ -39,5 +35,17 @@ public class ProductTransformer {
         existingProduct.setInventory(dto.getInventory());
         existingProduct.setDescription(dto.getDescription());
     }
-}
 
+    @Override
+    public ProductResponseDTO toDTO(Product entity) {
+        return ProductResponseDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .brand(entity.getBrand())
+                .price(entity.getPrice())
+                .inventory(entity.getInventory())
+                .description(entity.getDescription())
+                .categoryId(entity.getCategory().getId())
+                .build();
+    }
+}
