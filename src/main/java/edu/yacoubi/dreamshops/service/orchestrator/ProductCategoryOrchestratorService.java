@@ -1,6 +1,6 @@
 package edu.yacoubi.dreamshops.service.orchestrator;
 
-import edu.yacoubi.dreamshops.converter.ProductConverter;
+import edu.yacoubi.dreamshops.mapping.ProductTransformer;
 import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
 import edu.yacoubi.dreamshops.dto.product.ProductUpdateDTO;
 import edu.yacoubi.dreamshops.exception.BusinessEntityNotFoundException;
@@ -21,7 +21,7 @@ public class ProductCategoryOrchestratorService
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final ProductConverter productConverter;
+    private final ProductTransformer productTransformer;
 
     @Override
     public Product createProductForCategory(ProductCreateDTO productCreateDTO, Long categoryId) {
@@ -29,7 +29,7 @@ public class ProductCategoryOrchestratorService
 
         try {
             Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
-            Product product = productConverter.toEntity(productCreateDTO, foundCategory);
+            Product product = productTransformer.toEntity(productCreateDTO, foundCategory);
             Product savedProduct = productService.addProduct(product);
 
             log.info("::createProductForCategory completed successfully with product {}", savedProduct);
@@ -52,7 +52,7 @@ public class ProductCategoryOrchestratorService
             Category newCategory = categoryService.getCategoryByIdOrThrow(request.getCategoryId());
             Product existingProduct = productService.getProductByIdOrThrow(productId);
 
-            productConverter.updateEntity(existingProduct, request);
+            productTransformer.updateEntity(existingProduct, request);
             existingProduct.setCategory(newCategory); // Kategorie zuweisen
 
             Product updatedProduct = productService.updateProduct(existingProduct);
