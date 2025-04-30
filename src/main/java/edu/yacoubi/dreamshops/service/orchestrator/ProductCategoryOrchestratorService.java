@@ -2,7 +2,8 @@ package edu.yacoubi.dreamshops.service.orchestrator;
 
 import edu.yacoubi.dreamshops.converter.ProductConverter;
 import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
-import edu.yacoubi.dreamshops.exception.CategoryNotFoundException;
+import edu.yacoubi.dreamshops.dto.product.ProductUpdateDTO;
+import edu.yacoubi.dreamshops.exception.BusinessEntityNotFoundException;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.service.category.CategoryService;
@@ -33,7 +34,7 @@ public class ProductCategoryOrchestratorService
 
             log.info("::createProductForCategory completed successfully with product {}", savedProduct);
             return savedProduct;
-        } catch (CategoryNotFoundException e) {
+        } catch (BusinessEntityNotFoundException e) {
             log.error("::createProductForCategory failed - Category not found: {}", categoryId);
             throw e;
         } catch (Exception e) {
@@ -42,31 +43,20 @@ public class ProductCategoryOrchestratorService
         }
     }
 
-
     @Override
     @Transactional
-    public Product updateProduct(final ProductCreateDTO productDTO, final Long productId) {
-        if (log.isInfoEnabled()) {
-            log.info("::updateProduct started with productDTO {} and productId {}", productDTO, productId);
-        }
+    public Product updateProduct(ProductUpdateDTO request, Long productId) {
+        log.info("::updateProduct started with request {} and productId {}", request, productId);
 
         try {
-            final Category newCategory = categoryService.getCategoryByIdOrThrow(productDTO.getCategoryId());
-            final Product existingProduct = productService.getProductByIdOrThrow(productId);
+            Category newCategory = categoryService.getCategoryByIdOrThrow(request.getCategoryId());
+            Product existingProduct = productService.getProductByIdOrThrow(productId);
 
-            // Produkt-Daten aktualisieren
-            existingProduct.setName(productDTO.getName());
-            existingProduct.setBrand(productDTO.getBrand());
-            existingProduct.setPrice(productDTO.getPrice());
-            existingProduct.setInventory(productDTO.getInventory());
-            existingProduct.setDescription(productDTO.getDescription());
+            productConverter.updateEntity(existingProduct, request);
             existingProduct.setCategory(newCategory); // Kategorie zuweisen
 
-            final Product updatedProduct = productService.updateProduct(existingProduct);
-
-            if (log.isInfoEnabled()) {
-                log.info("::updateProduct completed successfully for productId {}", productId);
-            }
+            Product updatedProduct = productService.updateProduct(existingProduct);
+            log.info("::updateProduct completed successfully for productId {}", productId);
 
             return updatedProduct;
         } catch (Exception e) {
@@ -74,4 +64,7 @@ public class ProductCategoryOrchestratorService
             throw e;
         }
     }
+
+
+
 }

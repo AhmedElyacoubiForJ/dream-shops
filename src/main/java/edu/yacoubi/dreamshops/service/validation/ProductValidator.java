@@ -1,7 +1,7 @@
 package edu.yacoubi.dreamshops.service.validation;
 
 import edu.yacoubi.dreamshops.exception.BusinessEntityNotFoundException;
-import edu.yacoubi.dreamshops.exception.ProductNotAvailableException;
+import edu.yacoubi.dreamshops.exception.ProductNotActiveException;
 import edu.yacoubi.dreamshops.exception.ProductOutOfStockException;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.model.Status;
@@ -46,7 +46,7 @@ public class ProductValidator implements BaseValidator<Product, Long> {
 
         if (!Status.ACTIVE.equals(product.getStatus())) {
             log.error("::validateProductStatus error: Product ID {} is not available.", product.getId());
-            throw new ProductNotAvailableException("Product ID " + product.getId() + " is not available.");
+            throw new ProductNotActiveException("Product ID " + product.getId() + " is not available.");
         }
     }
 
