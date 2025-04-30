@@ -1,5 +1,6 @@
 package edu.yacoubi.dreamshops.service.category;
 
+import edu.yacoubi.dreamshops.exception.BusinessEntityNotFoundException;
 import edu.yacoubi.dreamshops.exception.DuplicateEntityException;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.repository.CategoryRepository;
@@ -20,12 +21,10 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category getCategoryByIdOrThrow(final Long categoryId) {
-        if (log.isInfoEnabled()) {
-            log.info("::getCategoryById started for categoryId {}", categoryId);
-        }
+        log.info("::getCategoryById started for categoryId {}", categoryId);
 
         try {
-            final Category foundCategory = categoryValidator.getValidatedOrThrow(categoryId);
+            Category foundCategory = categoryValidator.getValidatedOrThrow(categoryId);
             log.info("::getCategoryById completed successfully for categoryId {}", categoryId);
 
             return foundCategory;
@@ -37,62 +36,91 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category addCategory(final Category category) {
-        if (log.isInfoEnabled()) {
-            log.info("::addCategory started for category {}", category);
-        }
+        log.info("::addCategory started for category {}", category);
 
         if (category == null || category.getName() == null) {
-            String errorMessage = "Category name must not be null";
-            log.error("::addCategory error: {}", errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            log.error("::addCategory error: Category name must not be null");
+            throw new IllegalArgumentException("Category name must not be null");
         }
 
-        final String categoryName = category.getName();
+        String categoryName = category.getName();
         if (categoryValidator.existsByName(categoryName)) {
-            final String errorMessage = "Entity already exists with name: " + categoryName;
-            log.error("::addCategory error: {}", errorMessage);
-            throw new DuplicateEntityException(errorMessage);
+            log.error("::addCategory error: Entity already exists with name: {}", categoryName);
+            throw new DuplicateEntityException("Entity already exists with name: " + categoryName);
         }
 
-        final Category savedCategory = categoryRepository.save(category);
-
-        if (log.isInfoEnabled()) {
-            log.info("::addCategory completed successfully for category {}", savedCategory);
-        }
+        Category savedCategory = categoryRepository.save(category);
+        log.info("::addCategory completed successfully for category {}", savedCategory);
 
         return savedCategory;
     }
 
     @Override
-    public Category updateCategory(Category category) {
-        return null;
+    public Category updateCategory(final Category category) {
+        log.info("::updateCategory started for category {}", category);
+
+        if (category == null || category.getId() == null) {
+            log.error("::updateCategory error: Category and its ID must not be null");
+            throw new IllegalArgumentException("Category and its ID must not be null");
+        }
+
+        try {
+            categoryValidator.existsByIdOrThrow(category.getId());
+            Category updatedCategory = categoryRepository.save(category);
+            log.info("::updateCategory completed successfully for category {}", updatedCategory);
+            return updatedCategory;
+        } catch (BusinessEntityNotFoundException e) {
+            log.error("::updateCategory failed - Category not found: {}", category.getId());
+            throw e;
+        } catch (Exception e) {
+            log.error("::updateCategory unexpected error for categoryId {}: {}", category.getId(), e.getMessage());
+            throw new RuntimeException("Unexpected error while updating category " + category.getId(), e);
+        }
     }
 
     @Override
-    public void deleteCategoryById(Long categoryId) {
+    public void deleteCategoryById(final Long categoryId) {
+        log.info("::deleteCategoryById started for categoryId {}", categoryId);
 
+        try {
+            categoryValidator.existsByIdOrThrow(categoryId);
+
+//            if (productService.existsByCategoryId(categoryId)) {
+//                log.warn("::deleteCategoryById aborted - Category {} has associated products", categoryId);
+//                throw new IllegalStateException("Cannot delete category with existing products");
+//            }
+
+            categoryRepository.deleteById(categoryId);
+
+            log.info("::deleteCategoryById completed successfully for categoryId {}", categoryId);
+        } catch (BusinessEntityNotFoundException e) {
+            log.error("::deleteCategoryById failed - Category not found: {}", categoryId);
+            throw e;
+        } catch (Exception e) {
+            log.error("::deleteCategoryById error for categoryId {}: {}", categoryId, e.getMessage());
+            throw new RuntimeException("Unexpected error while deleting category " + categoryId, e);
+        }
     }
+
 
 
     @Override
     public Optional<Category> getCategoryByName(final String name) {
-        if (log.isInfoEnabled()) {
-            log.info("::getCategoryByName started for category name {}", name);
-        }
+        log.info("::getCategoryByName started for category name {}", name);
 
-        final Optional<Category> category = categoryRepository.findByName(name);
+        Optional<Category> category = categoryRepository.findByName(name);
 
-        if (log.isInfoEnabled()) {
-            log.info("::getCategoryByName completed with result {} for category name {}", category.isPresent(), name);
-        }
-
+        log.info("::getCategoryByName completed with result {} for category name {}", category.isPresent(), name);
         return category;
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return List.of();
-    }
+        log.info("::getAllCategories started");
 
-    // weitere methoden
+        List<Category> categories = categoryRepository.findAll();
+
+        log.info("::getAllCategories completed with {} categories found", categories.size());
+        return categories;
+    }
 }

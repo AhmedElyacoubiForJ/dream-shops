@@ -1,9 +1,9 @@
 package edu.yacoubi.dreamshops.service.orchestrator;
 
-import edu.yacoubi.dreamshops.mapping.ProductTransformer;
 import edu.yacoubi.dreamshops.dto.product.ProductCreateDTO;
 import edu.yacoubi.dreamshops.dto.product.ProductUpdateDTO;
 import edu.yacoubi.dreamshops.exception.BusinessEntityNotFoundException;
+import edu.yacoubi.dreamshops.mapping.ProductTransformer;
 import edu.yacoubi.dreamshops.model.Category;
 import edu.yacoubi.dreamshops.model.Product;
 import edu.yacoubi.dreamshops.service.category.CategoryService;
@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,23 +27,31 @@ public class ProductCategoryOrchestratorService
 
     @Override
     public Product createProductForCategory(ProductCreateDTO productCreateDTO, Long categoryId) {
-        log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productCreateDTO, categoryId);
+        log.info("::createProductForCategory started with productDTO: {}, categoryId: {}", productCreateDTO, categoryId);
+
+        validateCreateProductForCategory(productCreateDTO, categoryId);
 
         try {
             Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
             Product product = productTransformer.toEntity(productCreateDTO, foundCategory);
             Product savedProduct = productService.addProduct(product);
 
-            log.info("::createProductForCategory completed successfully with product {}", savedProduct);
+            log.info("::createProductForCategory completed successfully with product: {}", savedProduct);
             return savedProduct;
         } catch (BusinessEntityNotFoundException e) {
-            log.error("::createProductForCategory failed - Category not found: {}", categoryId);
+            log.warn("::createProductForCategory failed - Category not found: {}", categoryId);
             throw e;
         } catch (Exception e) {
             log.error("::createProductForCategory failed for categoryId {}: {}", categoryId, e.getMessage());
             throw new RuntimeException("Unexpected error while creating product for category " + categoryId, e);
         }
     }
+
+    private void validateCreateProductForCategory(ProductCreateDTO productCreateDTO, Long categoryId) {
+        Objects.requireNonNull(productCreateDTO, "ProductCreateDTO must not be null");
+        Objects.requireNonNull(categoryId, "Category ID must not be null");
+    }
+
 
     @Override
     @Transactional
@@ -64,7 +74,4 @@ public class ProductCategoryOrchestratorService
             throw e;
         }
     }
-
-
-
 }
