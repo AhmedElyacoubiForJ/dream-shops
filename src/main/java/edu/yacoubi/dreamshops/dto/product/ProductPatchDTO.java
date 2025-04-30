@@ -1,5 +1,6 @@
 package edu.yacoubi.dreamshops.dto.product;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,9 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class ProductPatchDTO {
+    @NotNull(message = "Product ID cannot be null")
     private Long id;
+
     private String name;
     private String brand;
 
