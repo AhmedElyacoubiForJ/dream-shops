@@ -22,14 +22,14 @@ public class ProductCategoryOrchestratorService
     private final ProductConverter productConverter;
 
     @Override
-    public Product createProductForCategory(final ProductCreateDTO productDTO, final Long categoryId) {
+    public Product createProductForCategory(final ProductCreateDTO productCreateDTO, final Long categoryId) {
         if (log.isInfoEnabled()) {
-            log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productDTO, categoryId);
+            log.info("::createProductForCategory started with: productDTO {}, categoryId {}", productCreateDTO, categoryId);
         }
 
         try {
             final Category foundCategory = categoryService.getCategoryByIdOrThrow(categoryId);
-            Product product = productConverter.toEntity(productDTO, foundCategory);
+            Product product = productConverter.toEntity(productCreateDTO, foundCategory);
 //            Product product = Product.builder()
 //                    .name(productDTO.getName())
 //                    .brand(productDTO.getBrand())
